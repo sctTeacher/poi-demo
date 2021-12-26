@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>poi-demo</contextName>
+    <property name="log.path" value="logs/logback_poiDemo.log"/>
+    <property name="pattern" value="%d{HH:mm:ss.SSS} %contextName %-5level %F %M %L - %msg%n"/>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/logback.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+   <!-- <appender name="mongodb" class="com.cloud.framework.log.MongoDBAppender">
+        <uri>mongodb://mongod:111111@10.1.1.42:27017</uri>
+        <CollectionName>log</CollectionName>
+        <database>system_log</database>
+    </appender>
+    <appender name="mqlog" class="com.cloud.framework.log.MongoDBAppender">
+        <uri>mongodb://mongod:111111@10.1.1.42:27017</uri>
+        <collectionName>mqlog</collectionName>
+        <database>system_log</database>
+    </appender>-->
+    <root level="info">
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </root>
+    <!--<logger name="mongodb" level="info">
+        <appender-ref ref="mongodb"/>
+    </logger>-->
+</configuration>
