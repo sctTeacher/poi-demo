@@ -1,32 +1,26 @@
 package com.shan.service.impl;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.shan.entity.po.CloudFile;
 import com.shan.file.ResumeUploader;
 import com.shan.service.UploaderService;
-import com.shan.utils.ConstantUtils;
 import com.shan.utils.Md5Util;
 import com.shan.utils.UUIDGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Map;
 
 @Service
 public class UploaderServiceImpl implements UploaderService {
 
-    @Value("${fileUploadPath}")
+    @Value("${spring.uploader.rootdir}")
     private String fileUploadPath;
 
-    private final ResumeUploader fileOperation;
-
-    public UploaderServiceImpl( Map<String, ResumeUploader> resumeUploader) {
-        fileOperation = resumeUploader.get(ConstantUtils.fs.unc.name());
-    }
-
+    @Autowired
+    private ResumeUploader fileOperation;
 
 
     @Override
@@ -60,8 +54,8 @@ public class UploaderServiceImpl implements UploaderService {
             cloudFile.setFileSize(new File(filePath).length());
             cloudFile.setGmtCreate(new Date());
             //存数据库
-           // int save = cloudFileMapper.save(cloudFile);
-            int save =1;
+            // int save = cloudFileMapper.save(cloudFile);
+            int save = 1;
             if (save > 0) {
                 return cloudFile.getId();
             }
@@ -80,7 +74,6 @@ public class UploaderServiceImpl implements UploaderService {
         String fPath = fileUploadPath;
         return fPath.endsWith("/") ? fPath : fPath + "/";
     }
-
 
 
     private String verifyRepeatFile(String path, String fileName, int i) {

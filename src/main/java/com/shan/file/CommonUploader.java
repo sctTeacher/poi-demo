@@ -19,10 +19,14 @@ import java.util.zip.ZipOutputStream;
 
 import com.shan.entity.bean.FileInfo;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
+@Component
 public class CommonUploader implements ResumeUploader {
+    @Value("${spring.uploader.tempdir}")
     private String tempDir;
+    @Value("${spring.uploader.isDelTempFile}")
     private Boolean isDelTempFile;
 
     public Boolean checkChunk(String sharePath, String md5File, Integer chunk) {

@@ -1,16 +1,15 @@
 server:
   port: 9001
 
+#  rootdir文件上传根路径  linux:/xxx/xx/ window D:\Download\
+#  tempdir: 分片临时目录
+#  isDelTempFile   和片后是否删除临时目录
 spring:
   uploader:
-    type: unc
-    account:
-    pwd:
+    rootdir: D:\Download\
     tempdir: temp
     isDelTempFile: true
 
 
-# 文件上传根路径  linux
-#fileUploadPath: /xxx/xx/
-# 文件上传根路径  window
-fileUploadPath: D:\Download\
+
+

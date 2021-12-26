@@ -38,6 +38,7 @@ public class TestUploader {
     }
 
 
+
     /**
      * 检查指定分片是否存在
      *
@@ -45,7 +46,7 @@ public class TestUploader {
      * @param chunk       第几片
      * @param moduleName  上传文件所在模块名称
      * @param fileTypeKey 文件类别   公司自己业务需求  会根据 模块名称+文件类别  定义上传目录
-     * @return
+     * @return   存在 true  不存在false
      */
     @PostMapping("/checkChunk")
     public Boolean checkChunk(String md5Value, Integer chunk, String moduleName, String fileTypeKey) {
