@@ -63,8 +63,12 @@
         </dependency>
 
         <!--文件分片上传使用到依赖 end  -->
-
-
+        <!-- 根据文件大小自动转换格式-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.5.9</version>
+        </dependency>
 
 
     </dependencies>
