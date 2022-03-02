@@ -3,6 +3,7 @@ package com.shan;
 import cn.hutool.core.io.unit.DataSizeUtil;
 
 /**
+ *  数据库 文件大小存整数 integer   页面展示  自动显示 k  m  G
  *  *     BYTES      1B      2^0     1
  *  *     KILOBYTES  1KB     2^10    1,024
  *  *     MEGABYTES  1MB     2^20    1,048,576
