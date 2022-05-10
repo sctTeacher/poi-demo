@@ -6,6 +6,7 @@
 package com.shan.file;
 
 import com.google.common.collect.Lists;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,13 +23,14 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
 @Component
 public class CommonUploader implements ResumeUploader {
     @Value("${spring.uploader.tempdir}")
     private String tempDir;
     @Value("${spring.uploader.isDelTempFile}")
     private Boolean isDelTempFile;
-
+    @Override
     public Boolean checkChunk(String sharePath, String md5File, Integer chunk) {
         Boolean isExisted = false;
         String filePath = String.format("%s/%s/%s/%s.tmp", sharePath, this.tempDir, md5File, chunk);
@@ -39,7 +41,7 @@ public class CommonUploader implements ResumeUploader {
 
         return isExisted;
     }
-
+    @Override
     public Boolean compress(List<String> inputFilename, String zipFilename) {
         Boolean result = false;
 
@@ -50,8 +52,8 @@ public class CommonUploader implements ResumeUploader {
             try {
                 String item;
                 String base;
-                for(Iterator var5 = inputFilename.iterator(); var5.hasNext(); this.zip(out, item, base)) {
-                    item = (String)var5.next();
+                for (Iterator var5 = inputFilename.iterator(); var5.hasNext(); this.zip(out, item, base)) {
+                    item = (String) var5.next();
                     base = "";
                     String[] items = item.split("/");
                     if (item.lastIndexOf("/") + 1 == item.length()) {
@@ -81,6 +83,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean copy(String fromPath, String tofilePath) {
         Boolean result = false;
 
@@ -104,6 +107,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean delete(String path) {
         Boolean result = false;
 
@@ -127,6 +131,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public InputStream download(String fromPath) {
         FileInputStream inputStream = null;
 
@@ -146,6 +151,7 @@ public class CommonUploader implements ResumeUploader {
         return (new File(path)).exists();
     }
 
+    @Override
     public Long getDiskSize(String path) {
         return this.getDiskSizeByte(path) / 1024L;
     }
@@ -162,7 +168,7 @@ public class CommonUploader implements ResumeUploader {
                 File[] var6 = files;
                 int var7 = files.length;
 
-                for(int var8 = 0; var8 < var7; ++var8) {
+                for (int var8 = 0; var8 < var7; ++var8) {
                     File f = var6[var8];
                     if (f.isFile()) {
                         result += f.length();
@@ -181,6 +187,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public List<FileInfo> listFiles(String path, boolean calculateFolderSize) {
         ArrayList result = Lists.newArrayList();
 
@@ -191,7 +198,7 @@ public class CommonUploader implements ResumeUploader {
                 File[] var6 = files;
                 int var7 = files.length;
 
-                for(int var8 = 0; var8 < var7; ++var8) {
+                for (int var8 = 0; var8 < var7; ++var8) {
                     File f = var6[var8];
                     Boolean isFile = f.isFile();
                     String filePath = f.getPath();
@@ -213,6 +220,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean merge(String uploadPath, String temPath, String md5File, Integer chunks, String name) {
         Boolean result = false;
         this.mkDir(uploadPath);
@@ -225,8 +233,8 @@ public class CommonUploader implements ResumeUploader {
                 byte[] buf = new byte[104857600];
                 long i = 0L;
 
-                while(true) {
-                    if (i >= (long)chunks) {
+                while (true) {
+                    if (i >= (long) chunks) {
                         if (this.isDelTempFile) {
                             this.delete(String.format("%s/%s/%s/", temPath, this.tempDir, md5File));
                         }
@@ -242,7 +250,7 @@ public class CommonUploader implements ResumeUploader {
                         boolean var13 = false;
 
                         int len;
-                        while((len = inputStream.read(buf)) != -1) {
+                        while ((len = inputStream.read(buf)) != -1) {
                             fileOutputStream.write(buf, 0, len);
                         }
                     } catch (Throwable var17) {
@@ -276,6 +284,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean mkDir(String path) {
         Boolean result = false;
 
@@ -292,6 +301,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean move(String fromPath, String toPath) {
         Boolean result = false;
 
@@ -311,6 +321,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean rename(String oldName, String newName) {
         Boolean result = false;
 
@@ -327,6 +338,7 @@ public class CommonUploader implements ResumeUploader {
         return result;
     }
 
+    @Override
     public Boolean upload(MultipartFile file, String sharePath, String md5File, Integer chunk) {
         try {
             String path = String.format("%s/%s/%s/", sharePath, this.tempDir, md5File);
@@ -352,7 +364,7 @@ public class CommonUploader implements ResumeUploader {
                 File[] files = file.listFiles();
                 base = base.length() == 0 ? "" : base;
 
-                for(int i = 0; i < files.length; ++i) {
+                for (int i = 0; i < files.length; ++i) {
                     String filePath = files[i].getPath();
                     this.zip(out, filePath.substring(filePath.indexOf("@") + 1), base + files[i].getName());
                 }
@@ -362,7 +374,7 @@ public class CommonUploader implements ResumeUploader {
                 byte[] buf = new byte[104857600];
                 FileInputStream inputStream = new FileInputStream(file);
                 try {
-                    while((len = inputStream.read(buf)) != -1) {
+                    while ((len = inputStream.read(buf)) != -1) {
                         out.write(buf, 0, len);
                     }
                 } catch (Throwable var11) {
@@ -397,13 +409,14 @@ public class CommonUploader implements ResumeUploader {
         this.isDelTempFile = isDelTempFile;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o == this) {
             return true;
         } else if (!(o instanceof CommonUploader)) {
             return false;
         } else {
-            CommonUploader other = (CommonUploader)o;
+            CommonUploader other = (CommonUploader) o;
             if (!other.canEqual(this)) {
                 return false;
             } else {
@@ -436,16 +449,18 @@ public class CommonUploader implements ResumeUploader {
         return other instanceof CommonUploader;
     }
 
+    @Override
     public int hashCode() {
-        int PRIME =  59;
+        int PRIME = 59;
         int result = 1;
         Object $isDelTempFile = this.getIsDelTempFile();
-         result = result * 59 + ($isDelTempFile == null ? 43 : $isDelTempFile.hashCode());
+        result = result * 59 + ($isDelTempFile == null ? 43 : $isDelTempFile.hashCode());
         Object $tempDir = this.getTempDir();
         result = result * 59 + ($tempDir == null ? 43 : $tempDir.hashCode());
         return result;
     }
 
+    @Override
     public String toString() {
         return "CommonUploader(tempDir=" + this.getTempDir() + ", isDelTempFile=" + this.getIsDelTempFile() + ")";
     }
